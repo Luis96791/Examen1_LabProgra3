@@ -7,6 +7,25 @@
 
 using namespace std;
 
+string toString(int number)
+{
+    if (number == 0)
+        return "0";
+
+    if(number < 0)
+        return "-"+toString(-number);
+    std::string temp="";
+    std::string returnvalue="";
+    while (number>0)
+    {
+        temp+=number%10+48;
+        number/=10;
+    }
+    for (int i=0;i<(int)temp.length();i++)
+        returnvalue+=temp[temp.length()-i-1];
+    return returnvalue;
+}
+
 SDL_Window* window;
 SDL_Renderer* renderer;
 SDL_Event Event;
@@ -45,13 +64,14 @@ void iniciar()
     barras[3] = IMG_LoadTexture(renderer,"barra4.png");
     barras[4] = IMG_LoadTexture(renderer,"barra5.png");
     barras[5] = IMG_LoadTexture(renderer,"perder.png");
-
+    posBarras();
 
     personaje[0] = IMG_LoadTexture(renderer,"personaje1.png");
     personaje[1] = IMG_LoadTexture(renderer,"personaje2.png");
     personaje[2] = IMG_LoadTexture(renderer,"personaje3.png");
     personaje[3] = IMG_LoadTexture(renderer,"personaje4.png");
     personaje[4] = IMG_LoadTexture(renderer,"personaje5.png");
+    posPersonajes();
 
     montana = IMG_LoadTexture(renderer, "montana1.png");
     rect_montana.x =0;
@@ -68,7 +88,7 @@ void iniciar()
     int frame=0;
     int frames_montanas=0;
 
-    bool parar = false, pausa = false;
+    bool parar = false, pausa = false, key_pressed = false;
 
 
     const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
@@ -95,6 +115,18 @@ void iniciar()
                 if(Event.key.keysym.sym == SDLK_c){
                     pausa = false;
                 }
+                if(Event.key.keysym.sym == SDLK_RIGHT){
+                    if(rect_personaje.x < 350 && !pausa)
+                        rect_personaje.x++;
+                }
+                if(Event.key.keysym.sym == SDLK_LEFT){
+                    if(rect_personaje.x > 0 && !pausa)
+                        rect_personaje.x--;
+                }
+                if(Event.key.keysym.sym == SDLK_UP){
+                    if(rect_personaje.y > 0 && !pausa)
+                        rect_personaje.y--;
+                }
             }
         }
 
@@ -110,8 +142,6 @@ void iniciar()
         SDL_RenderClear(renderer);
 
         SDL_RenderCopy(renderer, background, NULL, &rect_background);
-
-
 
         SDL_RenderCopy(renderer, montana, NULL, &rect_montana);
         SDL_Rect m_temp = rect_montana;
@@ -131,36 +161,24 @@ void iniciar()
             rect_montana3.x=0;
 
 
-
-
         if(frame>0 && frame < 1500){
-            posBarras();
             SDL_RenderCopy(renderer, barras[0], NULL, &rect_barra1);
-            posPersonajes();
             SDL_RenderCopy(renderer, personaje[0], NULL, &rect_personaje);
         }
         else if(frame>1500 && frame < 3000){
-            posBarras();
             SDL_RenderCopy(renderer, barras[1], NULL, &rect_barra1);
-            posPersonajes();
             SDL_RenderCopy(renderer, personaje[1], NULL, &rect_personaje);
         }
         else if(frame>3000 && frame < 4000){
-            posBarras();
             SDL_RenderCopy(renderer, barras[2], NULL, &rect_barra1);
-            posPersonajes();
             SDL_RenderCopy(renderer, personaje[2], NULL, &rect_personaje);
         }
         else if(frame>4000 && frame < 5000){
-            posBarras();
             SDL_RenderCopy(renderer, barras[3], NULL, &rect_barra1);
-            posPersonajes();
             SDL_RenderCopy(renderer, personaje[3], NULL, &rect_personaje);
         }
         else if(frame>5000 && frame < 5500){
-            posBarras();
             SDL_RenderCopy(renderer, barras[4], NULL, &rect_barra1);
-            posPersonajes();
             SDL_RenderCopy(renderer, personaje[4], NULL, &rect_personaje);
         }
         else if(frame>5500 && frame < 6500){
@@ -178,7 +196,7 @@ void iniciar()
             cout<<frame<<endl;
         }else{
             rect_pausa.x = 0;
-            rect_pausa.y = 00;
+            rect_pausa.y = 0;
             rect_pausa.w = 650;
             rect_pausa.h = 520;
             SDL_RenderCopy(renderer, pausaJ, NULL, &rect_pausa);
