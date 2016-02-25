@@ -10,30 +10,48 @@ using namespace std;
 SDL_Window* window;
 SDL_Renderer* renderer;
 SDL_Event Event;
-SDL_Texture *background, *montana, *montana3, *personaje[4], *barras[6];
+SDL_Texture *background, *montana, *montana3, *personaje[5], *barras[6], *pausaJ;
 
-SDL_Rect rect_background, rect_montana, rect_montana3, rect_barra1;
+SDL_Rect rect_background, rect_montana, rect_montana3, rect_barra1, rect_personaje, rect_pausa;
 
+void posBarras(){
+    rect_barra1.x = 10;
+    rect_barra1.y = 485;
+    rect_barra1.w = 200;
+    rect_barra1.h = 30;
+}
 
+void posPersonajes(){
+    rect_personaje.x = 180;
+    rect_personaje.y = 200;
+    rect_personaje.w = 300;
+    rect_personaje.h = 300;
+}
 
 void iniciar()
 {
-
-    //Init textures
     int w=0,h=0;
     background = IMG_LoadTexture(renderer,"3.png");
-//    SDL_QueryTexture(background, NULL, NULL, &w, &h);
     rect_background.x = 0;
     rect_background.y = 0;
     rect_background.w = 650;
     rect_background.h = 520;
 
-    barras[0] = IMG_LoadTexture(renderer,"barra1.png");
+    pausaJ = IMG_LoadTexture(renderer,"pause.png");
+
+    barras[0] = IMG_LoadTexture(renderer,"barrallena.png");
     barras[1] = IMG_LoadTexture(renderer,"barra2.png");
     barras[2] = IMG_LoadTexture(renderer,"barra3.png");
     barras[3] = IMG_LoadTexture(renderer,"barra4.png");
     barras[4] = IMG_LoadTexture(renderer,"barra5.png");
     barras[5] = IMG_LoadTexture(renderer,"perder.png");
+
+
+    personaje[0] = IMG_LoadTexture(renderer,"personaje1.png");
+    personaje[1] = IMG_LoadTexture(renderer,"personaje2.png");
+    personaje[2] = IMG_LoadTexture(renderer,"personaje3.png");
+    personaje[3] = IMG_LoadTexture(renderer,"personaje4.png");
+    personaje[4] = IMG_LoadTexture(renderer,"personaje5.png");
 
     montana = IMG_LoadTexture(renderer, "montana1.png");
     rect_montana.x =0;
@@ -47,17 +65,14 @@ void iniciar()
     rect_montana3.w = 650;
     rect_montana3.h = 300;
 
-
-
-//    list<Personaje*> personajes;
-//    personajes.push_back(new Sho(renderer,&personajes));
-//    personajes.push_back(new EnemigoVerde(renderer,&personajes));
-//    personajes.push_back(new EnemigoRojo(renderer,&personajes));
-
-    //Main Loop
     int frame=0;
     int frames_montanas=0;
+
+    bool parar = false, pausa = false;
+
+
     const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
+
     while(true)
     {
         while(SDL_PollEvent(&Event))
@@ -74,19 +89,20 @@ void iniciar()
                     return;
                 }
 
-                if(Event.key.keysym.sym == SDLK_p){
-                    break;
+                if(Event.key.keysym.sym == SDLK_p && frame<5500){
+                    pausa = true;
+                }
+                if(Event.key.keysym.sym == SDLK_c){
+                    pausa = false;
                 }
             }
         }
 
-        if(frames_montanas%20==0){
+        if(frames_montanas%20==0 && !parar){
             frames_montanas = rect_montana3.x--;
-//            frames_montanas = rect_montana.x++;
         }
 
-        if(frames_montanas%50==0){
-//            frames_montanas = rect_montana3.x--;
+        if(frames_montanas%50==0 && !parar){
             frames_montanas = rect_montana.x++;
         }
 
@@ -94,10 +110,6 @@ void iniciar()
         SDL_RenderClear(renderer);
 
         SDL_RenderCopy(renderer, background, NULL, &rect_background);
-
-
-
-        cout<<frame<<endl;
 
 
 
@@ -115,75 +127,64 @@ void iniciar()
         r_temp.x+=650;
         SDL_RenderCopy(renderer, montana3, NULL, &r_temp);
 
-//        SDL_RenderCopy(renderer, barras[0], NULL, &rect_barra1);
-
         if(rect_montana3.x<-650)
             rect_montana3.x=0;
 
 
-//        for(list<Personaje*>::iterator p=personajes.begin();
-//                p!=personajes.end();
-//                p++)
-//            (*p)->draw(renderer);
-
-//        for(list<Personaje*>::iterator p=personajes.begin();
-//                p!=personajes.end();
-//                p++)
-//            if((*p)->muerto)
-//            {
-//                personajes.erase(p);
-//                break;
-//            }
 
 
-
-        frame++;
-        frames_montanas++;
-
-        if(frame > 0 && frame < 1500){
-            rect_barra1.x = 10;
-            rect_barra1.y = 485;
-            rect_barra1.w = 200;
-            rect_barra1.h = 30;
+        if(frame>0 && frame < 1500){
+            posBarras();
             SDL_RenderCopy(renderer, barras[0], NULL, &rect_barra1);
+            posPersonajes();
+            SDL_RenderCopy(renderer, personaje[0], NULL, &rect_personaje);
         }
         else if(frame>1500 && frame < 3000){
-            rect_barra1.x = 10;
-            rect_barra1.y = 485;
-            rect_barra1.w = 200;
-            rect_barra1.h = 30;
+            posBarras();
             SDL_RenderCopy(renderer, barras[1], NULL, &rect_barra1);
+            posPersonajes();
+            SDL_RenderCopy(renderer, personaje[1], NULL, &rect_personaje);
         }
-        else if(frame>3000 && frame < 4500){
-            rect_barra1.x = 10;
-            rect_barra1.y = 485;
-            rect_barra1.w = 200;
-            rect_barra1.h = 30;
+        else if(frame>3000 && frame < 4000){
+            posBarras();
             SDL_RenderCopy(renderer, barras[2], NULL, &rect_barra1);
+            posPersonajes();
+            SDL_RenderCopy(renderer, personaje[2], NULL, &rect_personaje);
         }
-        else if(frame>4500 && frame < 5000){
-            rect_barra1.x = 10;
-            rect_barra1.y = 485;
-            rect_barra1.w = 200;
-            rect_barra1.h = 30;
+        else if(frame>4000 && frame < 5000){
+            posBarras();
             SDL_RenderCopy(renderer, barras[3], NULL, &rect_barra1);
+            posPersonajes();
+            SDL_RenderCopy(renderer, personaje[3], NULL, &rect_personaje);
         }
-        else if(frame>5000 && frame < 6000){
-            rect_barra1.x = 10;
-            rect_barra1.y = 485;
-            rect_barra1.w = 200;
-            rect_barra1.h = 30;
+        else if(frame>5000 && frame < 5500){
+            posBarras();
             SDL_RenderCopy(renderer, barras[4], NULL, &rect_barra1);
+            posPersonajes();
+            SDL_RenderCopy(renderer, personaje[4], NULL, &rect_personaje);
         }
-        else if(frame>6000){
+        else if(frame>5500 && frame < 6500){
             rect_barra1.x = 0;
             rect_barra1.y = 0;
             rect_barra1.w = 650;
             rect_barra1.h = 520;
             SDL_RenderCopy(renderer, barras[5], NULL, &rect_barra1);
+            parar = true;
         }
 
-        if(frame>6300)
+        if(!pausa){
+            frame++;
+            frames_montanas++;
+            cout<<frame<<endl;
+        }else{
+            rect_pausa.x = 0;
+            rect_pausa.y = 00;
+            rect_pausa.w = 650;
+            rect_pausa.h = 520;
+            SDL_RenderCopy(renderer, pausaJ, NULL, &rect_pausa);
+        }
+
+        if(frame>6500)
             break;
 
         SDL_RenderPresent(renderer);
