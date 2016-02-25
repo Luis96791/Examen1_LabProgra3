@@ -10,10 +10,9 @@ using namespace std;
 SDL_Window* window;
 SDL_Renderer* renderer;
 SDL_Event Event;
-SDL_Texture *background, *montana, *montana3, *personaje[4], *barras[5];
+SDL_Texture *background, *montana, *montana3, *personaje[4], *barras[6];
 
-SDL_Rect rect_background, rect_montana, rect_montana3, rect_barra1, rect_barra2,
-        rect_barra3, rect_barra4, rect_barra5;
+SDL_Rect rect_background, rect_montana, rect_montana3, rect_barra1;
 
 
 
@@ -33,7 +32,8 @@ void iniciar()
     barras[1] = IMG_LoadTexture(renderer,"barra2.png");
     barras[2] = IMG_LoadTexture(renderer,"barra3.png");
     barras[3] = IMG_LoadTexture(renderer,"barra4.png");
-    barras[4] = IMG_LoadTexture(renderer,"perder.png");
+    barras[4] = IMG_LoadTexture(renderer,"barra5.png");
+    barras[5] = IMG_LoadTexture(renderer,"perder.png");
 
     montana = IMG_LoadTexture(renderer, "montana1.png");
     rect_montana.x =0;
@@ -74,13 +74,11 @@ void iniciar()
                     return;
                 }
 
-                if(Event.key.keysym.sym == SDLK_r){
+                if(Event.key.keysym.sym == SDLK_p){
                     break;
                 }
             }
         }
-
-
 
         if(frames_montanas%20==0){
             frames_montanas = rect_montana3.x--;
@@ -150,35 +148,42 @@ void iniciar()
             SDL_RenderCopy(renderer, barras[0], NULL, &rect_barra1);
         }
         else if(frame>1500 && frame < 3000){
-            rect_barra2.x = 10;
-            rect_barra2.y = 485;
-            rect_barra2.w = 200;
-            rect_barra2.h = 30;
-            SDL_RenderCopy(renderer, barras[1], NULL, &rect_barra2);
+            rect_barra1.x = 10;
+            rect_barra1.y = 485;
+            rect_barra1.w = 200;
+            rect_barra1.h = 30;
+            SDL_RenderCopy(renderer, barras[1], NULL, &rect_barra1);
         }
         else if(frame>3000 && frame < 4500){
-            rect_barra3.x = 10;
-            rect_barra3.y = 485;
-            rect_barra3.w = 200;
-            rect_barra3.h = 30;
-            SDL_RenderCopy(renderer, barras[2], NULL, &rect_barra3);
+            rect_barra1.x = 10;
+            rect_barra1.y = 485;
+            rect_barra1.w = 200;
+            rect_barra1.h = 30;
+            SDL_RenderCopy(renderer, barras[2], NULL, &rect_barra1);
         }
         else if(frame>4500 && frame < 5000){
-            rect_barra4.x = 10;
-            rect_barra4.y = 485;
-            rect_barra4.w = 200;
-            rect_barra4.h = 30;
-            SDL_RenderCopy(renderer, barras[3], NULL, &rect_barra4);
+            rect_barra1.x = 10;
+            rect_barra1.y = 485;
+            rect_barra1.w = 200;
+            rect_barra1.h = 30;
+            SDL_RenderCopy(renderer, barras[3], NULL, &rect_barra1);
         }
-        else if(frame>5000){
-            rect_barra5.x = 0;
-            rect_barra5.y = 0;
-            rect_barra5.w = 650;
-            rect_barra5.h = 520;
-            SDL_RenderCopy(renderer, barras[4], NULL, &rect_barra5);
+        else if(frame>5000 && frame < 6000){
+            rect_barra1.x = 10;
+            rect_barra1.y = 485;
+            rect_barra1.w = 200;
+            rect_barra1.h = 30;
+            SDL_RenderCopy(renderer, barras[4], NULL, &rect_barra1);
+        }
+        else if(frame>6000){
+            rect_barra1.x = 0;
+            rect_barra1.y = 0;
+            rect_barra1.w = 650;
+            rect_barra1.h = 520;
+            SDL_RenderCopy(renderer, barras[5], NULL, &rect_barra1);
         }
 
-        if(frame>5300)
+        if(frame>6300)
             break;
 
         SDL_RenderPresent(renderer);
