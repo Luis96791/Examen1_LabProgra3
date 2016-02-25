@@ -1,30 +1,12 @@
 #include<SDL2/SDL.h>
 #include<SDL2/SDL_image.h>
 #include<iostream>
-#include<vector>
-#include<list>
+#include<fstream>
 
 
 using namespace std;
 
-string toString(int number)
-{
-    if (number == 0)
-        return "0";
 
-    if(number < 0)
-        return "-"+toString(-number);
-    std::string temp="";
-    std::string returnvalue="";
-    while (number>0)
-    {
-        temp+=number%10+48;
-        number/=10;
-    }
-    for (int i=0;i<(int)temp.length();i++)
-        returnvalue+=temp[temp.length()-i-1];
-    return returnvalue;
-}
 
 SDL_Window* window;
 SDL_Renderer* renderer;
@@ -33,18 +15,36 @@ SDL_Texture *background, *montana, *montana3, *personaje[5], *barras[6], *pausaJ
 
 SDL_Rect rect_background, rect_montana, rect_montana3, rect_barra1, rect_personaje, rect_pausa;
 
-void posBarras(){
-    rect_barra1.x = 10;
-    rect_barra1.y = 485;
-    rect_barra1.w = 200;
-    rect_barra1.h = 30;
+int posBarras(){
+    ifstream align_file("align_barra.txt");
+    int align_x, align_y, align_w, align_h;
+    align_file>>align_x;
+    align_file>>align_y;
+    align_file>>align_w;
+    align_file>>align_h;
+
+    rect_barra1.x = align_x;
+    rect_barra1.y = align_y;
+    rect_barra1.w = align_w;
+    rect_barra1.h = align_h;
+
+    return rect_barra1.x, rect_barra1.y, rect_barra1.w, rect_barra1.h;
 }
 
-void posPersonajes(){
-    rect_personaje.x = 180;
-    rect_personaje.y = 200;
-    rect_personaje.w = 300;
-    rect_personaje.h = 300;
+int posPersonajes(){
+    ifstream align_file("align_personaje.txt");
+    int align_x, align_y, align_w, align_h;
+    align_file>>align_x;
+    align_file>>align_y;
+    align_file>>align_w;
+    align_file>>align_h;
+
+    rect_personaje.x = align_x;
+    rect_personaje.y = align_y;
+    rect_personaje.w = align_w;
+    rect_personaje.h = align_h;
+
+    return rect_personaje.x, rect_personaje.y, rect_personaje.w, rect_personaje.h;
 }
 
 void iniciar()
@@ -290,7 +290,7 @@ int main( int argc, char* args[] )
         return 10;
     }
     //Creates a SDL Windo
-    if((window = SDL_CreateWindow("Menu Principal", 100, 100, 650/*WIDTH*/, 520/*HEIGHT*/, SDL_WINDOW_RESIZABLE | SDL_RENDERER_PRESENTVSYNC)) == NULL)
+    if((window = SDL_CreateWindow("Emoticono", 100, 100, 650/*WIDTH*/, 520/*HEIGHT*/, SDL_WINDOW_RESIZABLE | SDL_RENDERER_PRESENTVSYNC)) == NULL)
     {
         return 20;
     }
