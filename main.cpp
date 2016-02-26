@@ -3,16 +3,12 @@
 #include<iostream>
 #include<fstream>
 
-
 using namespace std;
-
-
 
 SDL_Window* window;
 SDL_Renderer* renderer;
 SDL_Event Event;
 SDL_Texture *background, *montana, *montana3, *personaje[5], *barras[6], *pausaJ;
-
 SDL_Rect rect_background, rect_montana, rect_montana3, rect_barra1, rect_personaje, rect_pausa;
 
 int posBarras(){
@@ -87,9 +83,7 @@ void iniciar()
 
     int frame=0;
     int frames_montanas=0;
-
     bool parar = false, pausa = false, key_pressed = false;
-
 
     const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
 
@@ -112,17 +106,21 @@ void iniciar()
                 if(Event.key.keysym.sym == SDLK_p && frame<5500){
                     pausa = true;
                 }
+
                 if(Event.key.keysym.sym == SDLK_c){
                     pausa = false;
                 }
+
                 if(Event.key.keysym.sym == SDLK_RIGHT){
                     if(rect_personaje.x < 350 && !pausa)
                         rect_personaje.x++;
                 }
+
                 if(Event.key.keysym.sym == SDLK_LEFT){
                     if(rect_personaje.x > 0 && !pausa)
                         rect_personaje.x--;
                 }
+
                 if(Event.key.keysym.sym == SDLK_UP){
                     if(rect_personaje.y > 0 && !pausa)
                         rect_personaje.y--;
@@ -137,7 +135,6 @@ void iniciar()
         if(frames_montanas%50==0 && !parar){
             frames_montanas = rect_montana.x++;
         }
-
 
         SDL_RenderClear(renderer);
 
@@ -165,6 +162,7 @@ void iniciar()
             SDL_RenderCopy(renderer, barras[0], NULL, &rect_barra1);
             SDL_RenderCopy(renderer, personaje[0], NULL, &rect_personaje);
         }
+
         else if(frame>1500 && frame < 3000){
             SDL_RenderCopy(renderer, barras[1], NULL, &rect_barra1);
             SDL_RenderCopy(renderer, personaje[1], NULL, &rect_personaje);
@@ -214,14 +212,13 @@ void iniciar()
 void menu()
 {
 
-    int opcion = 1;
+    int opc = 1;
     SDL_Texture *menu[3];
     menu[0] = IMG_LoadTexture(renderer,"menu1.png");
     menu[1] = IMG_LoadTexture(renderer,"menu2.png");
     menu[2] = IMG_LoadTexture(renderer,"menu3.png");
 
     SDL_Rect menu_rect;
-//    SDL_QueryTexture(menu[0], NULL, NULL, 500, 650);
     menu_rect.x = 0;
     menu_rect.y = 0;
     menu_rect.h= 520;
@@ -251,23 +248,20 @@ void menu()
                 }
                 if(Event.key.keysym.sym == SDLK_DOWN)
                 {
-                    opcion++;
-                    if(opcion > 3)
-                        opcion = 3;
+                    opc++;
+                    if(opc > 3)
+                        opc = 3;
                 }
                 if(Event.key.keysym.sym == SDLK_UP)
                 {
-                    opcion--;
-                    if(opcion < 1)
-                        opcion = 1;
+                    opc--;
+                    if(opc < 1)
+                        opc = 1;
                 }
                 if(Event.key.keysym.sym == SDLK_RETURN)
                 {
-                    switch(opcion)
+                    switch(opc)
                     {
-                        case 1:
-//                            loopJuego();
-                        break;
                         case 2:
                             iniciar();
                         break;
@@ -278,7 +272,7 @@ void menu()
                 }
             }
         }
-        SDL_RenderCopy(renderer,menu[opcion-1],NULL,&menu_rect);
+        SDL_RenderCopy(renderer,menu[opc-1],NULL,&menu_rect);
 
         SDL_RenderPresent(renderer);
     }
@@ -286,17 +280,17 @@ void menu()
 
 int main( int argc, char* args[] )
 {
-    //Init SDL
+
     if(SDL_Init(SDL_INIT_EVERYTHING) < 0)
     {
         return 10;
     }
-    //Creates a SDL Windo
+
     if((window = SDL_CreateWindow("Emoticono", 100, 100, 650/*WIDTH*/, 520/*HEIGHT*/, SDL_WINDOW_RESIZABLE | SDL_RENDERER_PRESENTVSYNC)) == NULL)
     {
         return 20;
     }
-    //SDL Renderer
+
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED );
     if (renderer == NULL)
     {
